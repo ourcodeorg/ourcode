@@ -1,0 +1,16 @@
+FROM node:16.18.0-alpine3.15
+
+WORKDIR /app
+
+COPY . .
+
+RUN corepack enable
+
+RUN pnpm i
+
+RUN pnpm build
+
+EXPOSE 5000
+
+
+CMD ["pnpm", "start" ]
