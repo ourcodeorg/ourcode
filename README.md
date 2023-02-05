@@ -30,5 +30,5 @@ You can join this project by messaging **0xSH1V4M#8886** or **Holy Spirit#5707.*
 
 - [ujjwal-kr](https://github.com/ujjwal-kr)
 - [Shivam](https://github.com/shivam1317)
-- [Yogesh](https://github.com/KYogesh20)
+- [Yogesh](https://bit.ly/github_KYogesh20)
 - [Gurpal](https://github.com/phantomknight287)
