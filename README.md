@@ -29,6 +29,12 @@ A platform for devs and students to collaborate on projects or research.
 - Run `make reload` to restart containers. (`make reload c=backend` or `make reload c=ourcode-db`).
 - Run `make down` to stop and remove the containers.
 
+### Windows
+- Install the [Cygwin](https://www.cygwin.com/) terminal.
+- Make sure to install make at time of installation of cygwin.
+- In the cygwin terminal, `cd` to the working directory.
+- Follow the commands at the linux section.
+
 ## Coding Guidelines
 
 - All code should be reviewed by peer
