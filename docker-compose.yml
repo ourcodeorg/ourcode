@@ -1,5 +1,5 @@
 services:
-  postgres:
+  ourcode-db:
     image: postgres:15-alpine
     environment:
       - POSTGRES_PASSWORD=password
@@ -26,7 +26,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     depends_on:
-      postgres:
+      ourcode-db:
         condition: service_healthy
 
 volumes:
