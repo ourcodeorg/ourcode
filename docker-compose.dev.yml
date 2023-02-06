@@ -1,0 +1,38 @@
+services:
+  ourcode-db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DATABASE=ourcode
+    restart: unless-stopped
+    container_name: ourcode-db
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    container_name: ourcode-backend
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - 5000:5000
+      - 5555:5555 # for prisma studio
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    depends_on:
+      ourcode-db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+volumes:
+  db:
+    driver: local
