@@ -14,6 +14,21 @@ A platform for devs and students to collaborate on projects or research.
 - FE: React/Next, mantine, tailwind
 - Backend: Nest (Render), Prisma, PSQL
 
+## Build Steps
+
+### Linux
+- Make sure to have the following installed:
+    - node 16+
+    - make
+    - docker
+    - docker compose
+- Run `make` to setup environment and migrate db.
+- Run `make dev` to start development environment.
+- Run `make prod` to start production environment.
+- Run `make logs` for logs. (`make logs c=backend` for logs of backend).
+- Run `make reload` to restart containers. (`make reload c=backend` or `make reload c=ourcode-db`).
+- Run `make down` to stop and remove the containers.
+
 ## Coding Guidelines
 
 - All code should be reviewed by peer
