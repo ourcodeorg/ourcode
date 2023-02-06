@@ -20,8 +20,8 @@ logs:
 
 dev:
 	cp ./.env.example ./.env
-	docker-compose -f $(DEV_COMPOSE) build
-	docker-compose -f $(DEV_COMPOSE) up -d $(c)
+	docker compose -f $(DEV_COMPOSE) build
+	docker compose -f $(DEV_COMPOSE) up -d $(c)
 
 reload:
 	make stop
@@ -32,5 +32,5 @@ stop:
 
 prod:
 	make
-	docker-compose build
-	docker-compose up -d
+	docker compose build
+	docker compose up -d
