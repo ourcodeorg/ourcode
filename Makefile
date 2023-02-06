@@ -16,4 +16,18 @@ down:
 	docker compose down
 
 logs:
-	docker compose logs $(c)
+	docker compose logs -f $(c)
+
+dev:
+	cp ./.env.example ./.env
+	docker-compose -f $(DEV_COMPOSE) build
+	docker-compose -f $(DEV_COMPOSE) up -d $(c)
+
+reload:
+	make stop
+	make dev
+
+prod:
+	make
+	docker-compose build
+	docker-compose up -d

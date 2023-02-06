@@ -26,10 +26,12 @@ services:
       - 5555:5555 # for prisma studio
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     depends_on:
       ourcode-db:
         condition: service_healthy
+    volumes:
+      - ./backend:/app
 
 volumes:
   db:
