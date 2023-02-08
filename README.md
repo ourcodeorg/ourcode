@@ -23,7 +23,8 @@ A platform for devs and students to collaborate on projects or research.
     - docker
     - docker compose
 - Run `make` to setup environment and migrate db.
-- Run `make dev` to start development environment.
+- Run `make dev` to start development environment [both frontend and backend].
+- Run `make backend` to run server [dev mode] and db, `make frontend` to run frontend [dev mode].
 - Run `make prod` to start production environment.
 - Run `make logs` for logs. (`make logs c=backend` for logs of backend).
 - Run `make reload` to restart containers. (`make reload c=backend` or `make reload c=ourcode-db`).
