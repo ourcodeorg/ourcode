@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
-
+import { createUserDto, loginUserDto } from './entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: any) {
+  create(userEntity: createUserDto) {
+    return 'This action adds a new auth';
+  }
+
+  login(userEntity: loginUserDto) {
     return 'This action adds a new auth';
   }
 
