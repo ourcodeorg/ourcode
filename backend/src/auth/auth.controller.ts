@@ -1,32 +1,44 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { CreateUserDto, UpdateUserDto } from './entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: any) {
-    return this.authService.create(createAuthDto);
+  @Post('signup')
+  async create(@Body() userEntity: CreateUserDto) {
+    return await this.authService.create(userEntity);
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  @Patch('update/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() userEntity: Partial<UpdateUserDto>,
+  ) {
+    return await this.authService.update(userEntity, id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+  @Get('users')
+  async findAll() {
+    return await this.authService.findAll();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: any) {
-    return this.authService.update(+id, updateAuthDto);
+  @Get('users')
+  async findOne(@Param() id: string) {
+    return await this.authService.findOne(id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Delete('users/:id')
+  async delete(@Param() id: string) {
+    return await this.authService.remove(id);
   }
 }
