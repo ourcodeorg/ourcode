@@ -6,8 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -25,13 +23,13 @@ export class AuthController {
     return this.authService.create(userEntity);
   }
 
-  @Post('update/:id')
-  update(@Param('id') id: string, @Body() userEntity: UpdateUserDto) {
+  @Patch('update/:id')
+  update(@Param('id') id: string, @Body() userEntity: Partial<UpdateUserDto>) {
     return this.authService.update(userEntity, id);
   }
-  
+
   @Get('users')
-  getUser() {
-    return this.authService.getUser();
+  findAll() {
+    return this.authService.findAll();
   }
 }
