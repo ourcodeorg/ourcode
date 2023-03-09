@@ -10,7 +10,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './entities/user.entity';
+import {
+  CreateUserDto,
+  LoginUserDto,
+  UpdateUserDto,
+} from './entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -21,14 +25,13 @@ export class AuthController {
     return this.authService.create(userEntity);
   }
 
-  @Post('login')
-  login(@Body() userEntity: LoginUserDto) {
-    return this.authService.login(userEntity);
-  }
-
   @Post('update/:id')
-  update(@Param('id') id: string, @Body() userEntity: UpdateUserDto){
-    return this.authService.update(userEntity,id);
+  update(@Param('id') id: string, @Body() userEntity: UpdateUserDto) {
+    return this.authService.update(userEntity, id);
   }
-
+  
+  @Get('users')
+  getUser() {
+    return this.authService.getUser();
+  }
 }

@@ -9,7 +9,7 @@ export interface LoginUserDto {
   password: string;
 }
 
-export interface UpdateUserDto{
+export interface UpdateUserDto {
   username: string;
   password: string;
 }

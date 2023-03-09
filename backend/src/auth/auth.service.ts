@@ -1,51 +1,62 @@
-import { Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto, LoginUserDto, UpdateUserDto } from './entities/user.entity';
-import * as jwt from "jsonwebtoken";
-import * as bcrpyt from "bcrypt";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateUserDto, UpdateUserDto } from './entities/user.entity';
+import * as bcrpyt from 'bcrypt';
 import { PrismaService } from 'src/services/prisma/prisma.service';
-
-
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService){}
+  constructor(private prisma: PrismaService) {}
   async create(userEntity: CreateUserDto) {
-    const passwordHash = await bcrpyt.hash(userEntity.password,10);
+    const passwordHash = await bcrpyt.hash(userEntity.password, 10);
     userEntity.password = passwordHash;
     try {
       const result = await this.prisma.user.create({
-        data : {
+        data: {
           username: userEntity.username,
           email: userEntity.email,
-          password: userEntity.password
-        }
-      })
+          password: userEntity.password,
+        },
+      });
+      delete result.password;
+      return result;
     } catch (error) {
-      throw new HttpException("User already exists",HttpStatus.BAD_REQUEST);
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
-    return "user created successfully";
   }
 
-  async update(data: Partial<UpdateUserDto>, id: string){
+  async update(data: Partial<UpdateUserDto>, id: string) {
     try {
-      if(data?.password!==undefined){
-        const passwordHash = await bcrpyt.hash(data.password,10);
+      if (data?.password !== undefined) {
+        const passwordHash = await bcrpyt.hash(data.password, 10);
         data.password = passwordHash;
       }
       const result = await this.prisma.user.update({
-        where:{
+        where: {
           id,
         },
         data,
-      })
+      });
+      delete result.password;
+      return result;
     } catch (e) {
-      throw new HttpException("User does not exists",HttpStatus.BAD_REQUEST);
+      throw new HttpException('User does not exists', HttpStatus.BAD_REQUEST);
     }
-    return "User data updated";
   }
 
-  async login(userEntity: LoginUserDto) {
-    return 'This action adds a new auth';
+  async getUser() {
+    try {
+      const result = this.prisma.user.findMany({
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          createdAt: true,
+        },
+      });
+      return result;
+    } catch (e) {
+      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   findAll() {
