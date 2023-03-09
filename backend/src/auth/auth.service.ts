@@ -63,4 +63,26 @@ export class AuthService {
       );
     }
   }
+
+  async findOne(id: string): Promise<User> {
+    try {
+      const user: User = await this.prisma.user.findFirstOrThrow({
+        where: { id },
+      });
+      return user;
+    } catch {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async remove(id: string): Promise<User> {
+    try {
+      const user: User = await this.prisma.user.delete({
+        where: { id },
+      });
+      return user;
+    } catch {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  }
 }

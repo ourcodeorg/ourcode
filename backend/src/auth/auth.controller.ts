@@ -8,11 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import {
-  CreateUserDto,
-  LoginUserDto,
-  UpdateUserDto,
-} from './entities/user.entity';
+import { CreateUserDto, UpdateUserDto } from './entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -20,16 +16,29 @@ export class AuthController {
 
   @Post('signup')
   async create(@Body() userEntity: CreateUserDto) {
-    return this.authService.create(userEntity);
+    return await this.authService.create(userEntity);
   }
 
   @Patch('update/:id')
-  update(@Param('id') id: string, @Body() userEntity: Partial<UpdateUserDto>) {
-    return this.authService.update(userEntity, id);
+  async update(
+    @Param('id') id: string,
+    @Body() userEntity: Partial<UpdateUserDto>,
+  ) {
+    return await this.authService.update(userEntity, id);
   }
 
   @Get('users')
-  findAll() {
-    return this.authService.findAll();
+  async findAll() {
+    return await this.authService.findAll();
+  }
+
+  @Get('users')
+  async findOne(@Param() id: string) {
+    return await this.authService.findOne(id);
+  }
+
+  @Delete('users/:id')
+  async delete(@Param() id: string) {
+    return await this.authService.remove(id);
   }
 }
