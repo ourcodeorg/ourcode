@@ -1,8 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './entities/user.entity';
+import {
+  CreateUserDto,
+  LoginUserDto,
+  UpdateUserDto,
+} from './entities/user.entity';
 import * as bcrpyt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 import { User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +29,36 @@ export class AuthService {
       return user;
     } catch {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async login(userEntity: LoginUserDto) {
+    try {
+      const { username } = userEntity;
+      const result = await this.prisma.user.findUniqueOrThrow({
+        where: {
+          username,
+        },
+      });
+      const bcryptResult = await bcrpyt.compare(
+        userEntity.password,
+        result.password,
+      );
+      if (bcryptResult === false) {
+        throw new HttpException(
+          'Username or Password is wrong',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const token = jwt.sign(userEntity, process.env.JWT_SECRET);
+      return {
+        token,
+      };
+    } catch (e) {
+      throw new HttpException(
+        'Internal Server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -68,9 +104,9 @@ export class AuthService {
     try {
       const user: User = await this.prisma.user.findUniqueOrThrow({
         where: {
-          id
-        }
-      })
+          id,
+        },
+      });
       return user;
     } catch {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
