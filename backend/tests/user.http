@@ -1,0 +1,32 @@
+@url = http://localhost:5000
+@contentType = application/json
+
+POST {{url}}/auth/signup
+Content-Type: {{contentType}}
+
+{
+    "username": "ujjwal",
+    "email": "epicujjwal@protonmail.com",
+    "password": "password"
+}
+
+###
+GET {{url}}/auth/users
+Content-Type: {{contentType}}
+
+###
+GET {{url}}/auth/users/clf2bx9cl0000qc1a9ypczipq
+Content-Type: {{contentType}}
+
+
+###
+PATCH {{url}}/auth/users/clf2bx9cl0000qc1a9ypczipq
+Content-Type: {{contentType}}
+
+{
+    "username": "uk"
+}
+
+###
+DELETE {{url}}/auth/users/clf2bx9cl0000qc1a9ypczipq
+Content-Type: {{contentType}}

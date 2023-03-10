@@ -32,7 +32,7 @@ export class AuthController {
     return await this.authService.findAll();
   }
 
-  @Get('users')
+  @Get('users/:id')
   async findOne(@Param() id: string) {
     return await this.authService.findOne(id);
   }
