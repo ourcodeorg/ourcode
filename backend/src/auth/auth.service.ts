@@ -21,7 +21,7 @@ export class AuthService {
       });
       delete user.password;
       return user;
-    } catch (error) {
+    } catch {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
   }
@@ -40,7 +40,7 @@ export class AuthService {
       });
       delete user.password;
       return user;
-    } catch (e) {
+    } catch {
       throw new HttpException('User does not exists', HttpStatus.BAD_REQUEST);
     }
   }
@@ -56,7 +56,7 @@ export class AuthService {
         },
       });
       return users as unknown as Partial<User[]>;
-    } catch (e) {
+    } catch {
       throw new HttpException(
         'Internal Server Error',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -66,9 +66,11 @@ export class AuthService {
 
   async findOne(id: string): Promise<User> {
     try {
-      const user: User = await this.prisma.user.findFirstOrThrow({
-        where: { id },
-      });
+      const user: User = await this.prisma.user.findUniqueOrThrow({
+        where: {
+          id
+        }
+      })
       return user;
     } catch {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -78,7 +80,7 @@ export class AuthService {
   async remove(id: string): Promise<User> {
     try {
       const user: User = await this.prisma.user.delete({
-        where: { id },
+        where: { id: id },
       });
       return user;
     } catch {

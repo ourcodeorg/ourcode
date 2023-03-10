@@ -12,14 +12,14 @@ import { CreateUserDto, UpdateUserDto } from './entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('signup')
   async create(@Body() userEntity: CreateUserDto) {
     return await this.authService.create(userEntity);
   }
 
-  @Patch('update/:id')
+  @Patch('users/:id')
   async update(
     @Param('id') id: string,
     @Body() userEntity: Partial<UpdateUserDto>,
@@ -33,12 +33,12 @@ export class AuthController {
   }
 
   @Get('users/:id')
-  async findOne(@Param() id: string) {
+  async findOne(@Param('id') id: string) {
     return await this.authService.findOne(id);
   }
 
   @Delete('users/:id')
-  async delete(@Param() id: string) {
+  async delete(@Param('id') id: string) {
     return await this.authService.remove(id);
   }
 }
