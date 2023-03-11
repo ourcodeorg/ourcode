@@ -1,8 +1,15 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import styles from "./page.module.css";
+import { Metadata } from "next";
 
-const inter = Inter({ subsets: ['latin'] })
+export const metadata: Metadata = {
+  title: "OurCode",
+  description:
+    "A place for you to find partners for personal projects, hackathons or research",
+};
+
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export default function Home() {
   return (
@@ -18,7 +25,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{' '}
+            By{" "}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
@@ -87,5 +94,5 @@ export default function Home() {
         </a>
       </div>
     </main>
-  )
+  );
 }
