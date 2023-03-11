@@ -46,7 +46,9 @@ export class AuthService {
       const payload: UserPayload = {
         id: user.id,
       };
-      const token = jwt.sign(payload, process.env.JWT_SECRET);
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '120d',
+      });
       delete user.password;
       return {
         token,
@@ -60,7 +62,10 @@ export class AuthService {
     }
   }
 
-  async update(updateUserDto: Partial<UpdateUserDto>, id: string): Promise<User> {
+  async update(
+    updateUserDto: Partial<UpdateUserDto>,
+    id: string,
+  ): Promise<User> {
     try {
       if (updateUserDto.password !== undefined) {
         const passwordHash = await bcrpyt.hash(updateUserDto.password, 10);
@@ -119,6 +124,18 @@ export class AuthService {
       return user;
     } catch {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async verify(token: string): Promise<User> {
+    try {
+      let payload = jwt.verify(token, process.env.JWT_SECRET) as UserPayload;
+      let user: User = await this.prisma.user.findFirstOrThrow({
+        where: { id: payload.id },
+      });
+      return user;
+    } catch {
+      throw Error('Unauthorized');
     }
   }
 }
