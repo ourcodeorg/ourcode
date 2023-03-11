@@ -19,21 +19,21 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  async create(@Body() userEntity: CreateUserDto) {
-    return await this.authService.create(userEntity);
+  async create(@Body() createDto: CreateUserDto) {
+    return await this.authService.create(createDto);
   }
 
   @Post('login')
-  login(@Body() userEntity: LoginUserDto) {
-    return this.authService.login(userEntity);
+  async login(@Body() loginDto: LoginUserDto) {
+    return await this.authService.login(loginDto);
   }
 
   @Patch('users/:id')
   async update(
     @Param('id') id: string,
-    @Body() userEntity: Partial<UpdateUserDto>,
+    @Body() updateDto: Partial<UpdateUserDto>,
   ) {
-    return await this.authService.update(userEntity, id);
+    return await this.authService.update(updateDto, id);
   }
 
   @Get('users')

@@ -15,15 +15,15 @@ import { User } from '@prisma/client';
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userEntity: CreateUserDto): Promise<Partial<User>> {
-    const passwordHash = await bcrpyt.hash(userEntity.password, 10);
-    userEntity.password = passwordHash;
+  async create(userDto: CreateUserDto): Promise<Partial<User>> {
+    const passwordHash = await bcrpyt.hash(userDto.password, 10);
+    userDto.password = passwordHash;
     try {
       const user: User = await this.prisma.user.create({
         data: {
-          username: userEntity.username,
-          email: userEntity.email,
-          password: userEntity.password,
+          username: userDto.username,
+          email: userDto.email,
+          password: userDto.password,
         },
       });
       delete user.password;
@@ -60,17 +60,17 @@ export class AuthService {
     }
   }
 
-  async update(data: Partial<UpdateUserDto>, id: string): Promise<User> {
+  async update(updateUserDto: Partial<UpdateUserDto>, id: string): Promise<User> {
     try {
-      if (data.password !== undefined) {
-        const passwordHash = await bcrpyt.hash(data.password, 10);
-        data.password = passwordHash;
+      if (updateUserDto.password !== undefined) {
+        const passwordHash = await bcrpyt.hash(updateUserDto.password, 10);
+        updateUserDto.password = passwordHash;
       }
       const user: User = await this.prisma.user.update({
         where: {
           id,
         },
-        data,
+        data: updateUserDto,
       });
       delete user.password;
       return user;
