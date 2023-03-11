@@ -1,14 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
   CreateUserDto,
+  LoginResponse,
   LoginUserDto,
   UpdateUserDto,
+  UserPayload,
 } from './entities/user.entity';
 import * as bcrpyt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 import { User } from '@prisma/client';
-import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -32,32 +33,29 @@ export class AuthService {
     }
   }
 
-  async login(userEntity: LoginUserDto) {
+  async login(loginDto: LoginUserDto): Promise<LoginResponse> {
     try {
-      const { username } = userEntity;
-      const result = await this.prisma.user.findUniqueOrThrow({
+      const { username } = loginDto;
+      const user = await this.prisma.user.findUniqueOrThrow({
         where: {
           username,
         },
       });
-      const bcryptResult = await bcrpyt.compare(
-        userEntity.password,
-        result.password,
-      );
-      if (bcryptResult === false) {
-        throw new HttpException(
-          'Username or Password is wrong',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      const token = jwt.sign(userEntity, process.env.JWT_SECRET);
+      const correct = await bcrpyt.compare(loginDto.password, user.password);
+      if (!correct) throw Error();
+      const payload: UserPayload = {
+        id: user.id,
+      };
+      const token = jwt.sign(payload, process.env.JWT_SECRET);
+      delete user.password;
       return {
         token,
+        user,
       };
     } catch (e) {
       throw new HttpException(
-        'Internal Server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Username or Password is Incorrect',
+        HttpStatus.UNAUTHORIZED,
       );
     }
   }
