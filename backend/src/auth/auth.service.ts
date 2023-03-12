@@ -1,6 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './entities/user.entity';
+import {
+  CreateUserDto,
+  LoginResponse,
+  LoginUserDto,
+  UpdateUserDto,
+  UserPayload,
+} from './entities/user.entity';
 import * as bcrpyt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 import { User } from '@prisma/client';
 
@@ -8,15 +15,15 @@ import { User } from '@prisma/client';
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userEntity: CreateUserDto): Promise<Partial<User>> {
-    const passwordHash = await bcrpyt.hash(userEntity.password, 10);
-    userEntity.password = passwordHash;
+  async create(userDto: CreateUserDto): Promise<Partial<User>> {
+    const passwordHash = await bcrpyt.hash(userDto.password, 10);
+    userDto.password = passwordHash;
     try {
       const user: User = await this.prisma.user.create({
         data: {
-          username: userEntity.username,
-          email: userEntity.email,
-          password: userEntity.password,
+          username: userDto.username,
+          email: userDto.email,
+          password: userDto.password,
         },
       });
       delete user.password;
@@ -26,17 +33,49 @@ export class AuthService {
     }
   }
 
-  async update(data: Partial<UpdateUserDto>, id: string): Promise<User> {
+  async login(loginDto: LoginUserDto): Promise<LoginResponse> {
     try {
-      if (data.password !== undefined) {
-        const passwordHash = await bcrpyt.hash(data.password, 10);
-        data.password = passwordHash;
+      const { username } = loginDto;
+      const user = await this.prisma.user.findUniqueOrThrow({
+        where: {
+          username,
+        },
+      });
+      const correct = await bcrpyt.compare(loginDto.password, user.password);
+      if (!correct) throw Error();
+      const payload: UserPayload = {
+        id: user.id,
+      };
+      const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '120d',
+      });
+      delete user.password;
+      return {
+        token,
+        user,
+      };
+    } catch (e) {
+      throw new HttpException(
+        'Username or Password is Incorrect',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
+
+  async update(
+    updateUserDto: Partial<UpdateUserDto>,
+    id: string,
+  ): Promise<User> {
+    try {
+      if (updateUserDto.password !== undefined) {
+        const passwordHash = await bcrpyt.hash(updateUserDto.password, 10);
+        updateUserDto.password = passwordHash;
       }
       const user: User = await this.prisma.user.update({
         where: {
           id,
         },
-        data,
+        data: updateUserDto,
       });
       delete user.password;
       return user;
@@ -68,9 +107,9 @@ export class AuthService {
     try {
       const user: User = await this.prisma.user.findUniqueOrThrow({
         where: {
-          id
-        }
-      })
+          id,
+        },
+      });
       return user;
     } catch {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
@@ -85,6 +124,18 @@ export class AuthService {
       return user;
     } catch {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async verify(token: string): Promise<User> {
+    try {
+      let payload = jwt.verify(token, process.env.JWT_SECRET) as UserPayload;
+      let user: User = await this.prisma.user.findFirstOrThrow({
+        where: { id: payload.id },
+      });
+      return user;
+    } catch {
+      throw Error('Unauthorized');
     }
   }
 }

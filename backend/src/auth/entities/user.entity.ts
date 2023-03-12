@@ -1,3 +1,6 @@
+import { User } from '@prisma/client';
+import { JwtPayload } from 'jsonwebtoken';
+
 export interface CreateUserDto {
   username: string;
   email: string;
@@ -12,4 +15,13 @@ export interface LoginUserDto {
 export interface UpdateUserDto {
   username: string;
   password: string;
+}
+
+export interface UserPayload extends JwtPayload {
+  id: string;
+}
+
+export interface LoginResponse {
+  user: Partial<User>;
+  token: string;
 }

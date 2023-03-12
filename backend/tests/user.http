@@ -11,6 +11,15 @@ Content-Type: {{contentType}}
 }
 
 ###
+POST {{url}}/auth/login
+Content-Type: {{contentType}}
+
+{
+    "username" : "ujjwal",
+    "password" : "password" 
+}
+
+###
 GET {{url}}/auth/users
 Content-Type: {{contentType}}
 
