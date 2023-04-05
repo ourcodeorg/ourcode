@@ -36,6 +36,12 @@ A platform for devs and students to collaborate on projects or research.
 - In the cygwin terminal, `cd` to the working directory.
 - Follow the commands at the linux section.
 
+If these techniques do not work on your windows pc, try the following:
+
+- In the cygwin terminal, run `make` and `make db` to start the db.
+- Run `make windows` to start the backend server.
+- Open a new tab and run `make frontend` to start the frontend server.
+
 ## Coding Guidelines
 
 - All code should be reviewed by peer
