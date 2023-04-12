@@ -32,7 +32,6 @@ frontend:
 	cd ./frontend && pnpm dev
 
 windows:
-	./windows.bat
 	# echo DATABASE_URL=\"postgres://postgres:password@localhost:5432/ourcode?schema=public\" > ./backend/.env
 	cd ./backend && pnpm run start:dev
 
