@@ -31,6 +31,20 @@ A platform for devs and students to collaborate on projects or research.
 - Run `make down` to stop and remove the containers.
 
 ### Windows
+
+Make sure you have nodejs 16+ and docker installed.
+
+- You can run `.\setup.bat` to setup environment variables and migrate the db.
+- And then `.\dev.bat` to start the both backend and frontend server.
+- `.\prod.bat` can be used to demo the production environment.
+- `docker compose down` to stop the database.
+
+You can also use the make build system if you want but this should be perfectly fine for now.
+
+#### Make build system:
+
+This provides more convenient approach but has some installation overhead.
+
 - Install the [Cygwin](https://www.cygwin.com/) terminal.
 - Make sure to install make at time of installation of cygwin.
 - In the cygwin terminal, `cd` to the working directory.
@@ -38,7 +52,7 @@ A platform for devs and students to collaborate on projects or research.
 
 If these techniques do not work on your windows pc, try the following:
 
-- In the cygwin terminal, run `make` and `make db` to start the db.
+- In the cygwin terminal, run `make` to migrate the db.
 - Run `make windows` to start the backend server.
 - Open a new tab and run `make frontend` to start the frontend server.
 

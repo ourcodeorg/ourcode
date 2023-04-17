@@ -26,13 +26,14 @@ logs:
 backend:
 	cp ./.env.example ./.env
 	docker compose -f $(DEV_COMPOSE) build
-	docker compose -f $(DEV_COMPOSE) up -d $(c)
+	docker compose -f $(DEV_COMPOSE) up -d backend
 
 frontend:
 	cd ./frontend && pnpm dev
 
 windows:
-	# echo DATABASE_URL=\"postgres://postgres:password@localhost:5432/ourcode?schema=public\" > ./backend/.env
+	make db
+	echo DATABASE_URL=\"postgres://postgres:password@localhost:5432/ourcode?schema=public\" > ./backend/.env
 	cd ./backend && pnpm run start:dev
 
 db:

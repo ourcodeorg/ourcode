@@ -9,6 +9,5 @@ cd ..\frontend
 call pnpm install
 cd ..\backend
 call npx prisma migrate dev
-del .env
 cd ..
 docker-compose stop ourcode-db
