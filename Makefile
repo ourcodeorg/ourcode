@@ -17,16 +17,29 @@ env:
 down:
 	docker compose down
 
+clean:
+	docker compose down -v
+
 logs:
 	docker compose logs -f $(c)
 
 backend:
 	cp ./.env.example ./.env
 	docker compose -f $(DEV_COMPOSE) build
-	docker compose -f $(DEV_COMPOSE) up -d $(c)
+	docker compose -f $(DEV_COMPOSE) up -d backend
 
 frontend:
 	cd ./frontend && pnpm dev
+
+windows:
+	make db
+	echo DATABASE_URL=\"postgres://postgres:password@localhost:5432/ourcode?schema=public\" > ./backend/.env
+	cd ./backend && pnpm run start:dev
+
+db:
+	cp ./.env.example ./.env
+	docker compose -f $(DEV_COMPOSE) build
+	docker compose -f $(DEV_COMPOSE) up -d ourcode-db
 
 dev:
 	make backend
