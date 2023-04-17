@@ -35,7 +35,7 @@ A platform for devs and students to collaborate on projects or research.
 Make sure you have nodejs 16+ and docker installed.
 
 - You can run `.\setup.bat` to setup environment variables and migrate the db.
-- And then `.\dev.bat` to start the both backend and frontend server.
+- And then `.\dev.bat` to start the db and both backend and frontend servers.
 - `.\prod.bat` can be used to demo the production environment.
 - `docker compose down` to stop the database.
 
@@ -53,7 +53,7 @@ This provides more convenient approach but has some installation overhead.
 If these techniques do not work on your windows pc, try the following:
 
 - In the cygwin terminal, run `make` to migrate the db.
-- Run `make windows` to start the backend server.
+- Run `make windows` to start the db and backend server.
 - Open a new tab and run `make frontend` to start the frontend server.
 
 ## Coding Guidelines
