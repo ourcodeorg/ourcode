@@ -54,7 +54,7 @@ If these techniques do not work on your windows pc, try the following:
 
 - In the cygwin terminal, run `make` to migrate the db.
 - Run `make windows` to start the db and backend server.
-- Open a new tab and run `make frontend` to start the frontend server.
+- Run `make down` to stop the db container.
 
 ## Coding Guidelines
 
