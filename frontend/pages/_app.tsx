@@ -1,11 +1,15 @@
 import { AppProps } from "next/app";
-import Head from "next/head";
 import {
   ColorScheme,
   ColorSchemeProvider,
   MantineProvider,
 } from "@mantine/core";
 import { useState } from "react";
+import { Header } from "@/components/header";
+import { outfit } from "@/fonts";
+import { Notifications } from "@mantine/notifications";
+import { RouterTransition } from "@/components/router";
+import { UserProvider } from "@/context/user";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -15,19 +19,25 @@ export default function App(props: AppProps) {
   };
 
   return (
-    <ColorSchemeProvider
-      colorScheme={colorScheme}
-      toggleColorScheme={toggleColorScheme}
-    >
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          colorScheme,
-        }}
+    <UserProvider>
+      <ColorSchemeProvider
+        colorScheme={colorScheme}
+        toggleColorScheme={toggleColorScheme}
       >
-        <Component {...pageProps} />
-      </MantineProvider>
-    </ColorSchemeProvider>
+        <MantineProvider
+          withGlobalStyles
+          withNormalizeCSS
+          theme={{
+            colorScheme,
+            fontFamily: outfit.style.fontFamily,
+          }}
+        >
+          <Header />
+          <RouterTransition />
+          <Notifications />
+          <Component {...pageProps} />
+        </MantineProvider>
+      </ColorSchemeProvider>
+    </UserProvider>
   );
 }
