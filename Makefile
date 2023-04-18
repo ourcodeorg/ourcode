@@ -47,7 +47,7 @@ reload:
 	make dev
 
 stop:
-	docker-compose stop $(c)
+	docker compose stop $(c)
 
 prod:
 	make

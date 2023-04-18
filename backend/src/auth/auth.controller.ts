@@ -8,31 +8,24 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import {
-  CreateUserDto,
-  UpdateUserDto,
-  LoginUserDto,
-} from './entities/user.entity';
+import { CreateUserDTO, UpdateUserDTO, LoginUserDTO } from './dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  async create(@Body() createDto: CreateUserDto) {
+  async create(@Body() createDto: CreateUserDTO) {
     return await this.authService.create(createDto);
   }
 
   @Post('login')
-  async login(@Body() loginDto: LoginUserDto) {
+  async login(@Body() loginDto: LoginUserDTO) {
     return await this.authService.login(loginDto);
   }
 
   @Patch('users/:id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateDto: Partial<UpdateUserDto>,
-  ) {
+  async update(@Param('id') id: string, @Body() updateDto: UpdateUserDTO) {
     return await this.authService.update(updateDto, id);
   }
 
