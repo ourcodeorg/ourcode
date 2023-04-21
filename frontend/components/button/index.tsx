@@ -8,7 +8,15 @@ export function CustomButton({ children, styleType = "normal" }: ButtonProps) {
     const btnStyle = getBtnStyle(styleType)
 
     return (
-      <Button sx={btnStyle} >{children}</Button>
+      <Button sx={{ 
+            borderRadius: 14,
+            height: "2.5rem",
+            borderWidth: 1.5,
+            transition: "0.2s",
+            ...btnStyle
+            }}>
+                {children}
+            </Button>
     );
   }
 
@@ -19,9 +27,6 @@ const getBtnStyle = (styleType: string) => {
         case "normal": 
             btnStyle = {
                 color: "white",
-                borderRadius: 14,
-                height: "2.5rem",
-                borderWidth: 1.5,
                 borderColor: "#929292",
                 backgroundColor: "#222C32",
                 "&:hover": {
@@ -34,12 +39,8 @@ const getBtnStyle = (styleType: string) => {
         case "danger":
             btnStyle = {
                 color: "#DB3737",
-                borderRadius: 14,
-                height: "2.5rem",
-                borderWidth: 1.5,
                 borderColor: "#DB3737",
                 backgroundColor: "transparent",
-                transition: "0.2s",
                 "&:hover": {
                     color: "#fff",
                     backgroundColor: "#DB3737",
@@ -51,12 +52,8 @@ const getBtnStyle = (styleType: string) => {
         case "success":
             btnStyle = {
                 color: "#2DC962",
-                borderRadius: 14,
-                height: "2.5rem",
-                borderWidth: 1.5,
                 borderColor: "#2DC962",
                 backgroundColor: "transparent",
-                transition: "0.2s",
                 "&:hover": {
                     color: "#fff",
                     backgroundColor: "#2DC962",
