@@ -1,7 +1,8 @@
 import { Button } from "@mantine/core";
+import { ReactNode } from "react";
 
 interface ButtonProps {
-    children: string,
+    children: ReactNode,
     styleType?: "normal" | "danger" | "success"
 }
 export function CustomButton({ children, styleType = "normal" }: ButtonProps) {
