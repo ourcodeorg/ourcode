@@ -23,10 +23,10 @@ export function CustomButton({ children, styleType = "normal" }: ButtonProps) {
 
 
 const getBtnStyle = (styleType: string) => {
-    let btnStyle = {};
+
     switch (styleType) {
         case "normal": 
-            btnStyle = {
+            return {
                 color: "white",
                 borderColor: "#929292",
                 backgroundColor: "#222C32",
@@ -35,10 +35,9 @@ const getBtnStyle = (styleType: string) => {
                     backgroundColor: "#222C32",
                 }
             }
-            break;
         
         case "danger":
-            btnStyle = {
+            return {
                 color: "#DB3737",
                 borderColor: "#DB3737",
                 backgroundColor: "transparent",
@@ -48,10 +47,9 @@ const getBtnStyle = (styleType: string) => {
                     borderColor: "#929292"
                 }
             }
-            break;
         
         case "success":
-            btnStyle = {
+            return {
                 color: "#2DC962",
                 borderColor: "#2DC962",
                 backgroundColor: "transparent",
@@ -61,8 +59,7 @@ const getBtnStyle = (styleType: string) => {
                     borderColor: "#929292"
                 }
             }
-            break;
+        default:
+            return {}
     }
-
-    return btnStyle
 }
