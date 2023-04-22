@@ -19,3 +19,15 @@ model User {
   createdAt DateTime @default(now())
 }
 
+model Post {
+  id String @id @unique @default(cuid())
+  title String @db.VarChar(240)
+  description String? @db.VarChar(5000) @default("No description here.")
+  skills String[]
+  progress String
+  peopleRequired Int
+  experience String
+  photo String?
+  link String?
+}
+
