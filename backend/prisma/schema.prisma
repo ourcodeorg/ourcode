@@ -22,7 +22,7 @@ model User {
 model Post {
   id String @id @unique @default(cuid())
   title String @db.VarChar(240)
-  description String? @db.VarChar(5000) @default("No description here.")
+  description String? @db.VarChar(5000)
   skills String[]
   progress String
   peopleRequired Int
