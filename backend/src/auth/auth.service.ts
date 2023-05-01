@@ -8,6 +8,7 @@ import {
 } from './entities/user.entity';
 import * as bcrpyt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { JWT_SECRET } from 'src/constants';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 import { User } from '@prisma/client';
 
@@ -42,18 +43,21 @@ export class AuthService {
         },
       });
       const correct = await bcrpyt.compare(loginDto.password, user.password);
-      if (!correct) throw Error();
-      const payload: UserPayload = {
-        id: user.id,
-      };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: '120d',
-      });
-      delete user.password;
-      return {
-        token,
-        user,
-      };
+      if (!correct) {
+        throw Error();
+      } else {
+        const payload: UserPayload = {
+          id: user.id,
+        };
+        const token = jwt.sign(payload, JWT_SECRET, {
+          expiresIn: '120d',
+        });
+        delete user.password;
+        return {
+          token,
+          user,
+        };
+      }
     } catch (e) {
       throw new HttpException(
         'Username or Password is Incorrect',

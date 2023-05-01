@@ -5,6 +5,7 @@ import {
   MaxLength,
   Length,
   IsInt,
+  IsObject,
 } from 'class-validator';
 
 export class CreatePostDTO {
@@ -36,6 +37,9 @@ export class CreatePostDTO {
   @IsString()
   @IsOptional()
   link?: string;
+
+  @IsObject()
+  user: object;
 }
 export class UpdatePostDto {
   @IsString()
@@ -71,4 +75,7 @@ export class UpdatePostDto {
   @IsString()
   @IsOptional()
   link?: string;
+
+  @IsObject()
+  user: object;
 }
