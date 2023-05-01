@@ -29,5 +29,6 @@ model Post {
   experience String
   photo String?
   link String?
+  user Json
 }
 
