@@ -68,9 +68,10 @@ If these techniques do not work on your windows pc, try the following:
 
 You can join this project by messaging **0xSH1V4M#8886** or **Holy Spirit#5707.** Cybersecurity people are also welcome as this is a good opportunity to work with developers and find bugs in a real world app. 
 
-### Current members:
+### Developers:
 
 - [ujjwal-kr](https://github.com/ujjwal-kr)
+- [Gurpal](https://github.com/phantomknight287)
 - [Shivam](https://github.com/shivam1317)
 - [Yogesh](https://bit.ly/github_KYogesh20)
-- [Gurpal](https://github.com/phantomknight287)
+- [Danish](https://github.com/HyperDanisH)
