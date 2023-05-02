@@ -1,7 +1,0 @@
-@url = http://localhost:5000
-
-###
-POST {{url}}/auth/signup
-Content-Type: application/json
-
-{}
