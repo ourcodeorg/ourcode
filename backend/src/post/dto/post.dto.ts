@@ -1,3 +1,4 @@
+import { User } from '@prisma/client';
 import {
   IsArray,
   IsOptional,
@@ -39,7 +40,10 @@ export class CreatePostDTO {
   link?: string;
 
   @IsObject()
-  user: object;
+  user: User;
+
+  @IsOptional()
+  userId: String;  
 }
 export class UpdatePostDto {
   @IsString()
