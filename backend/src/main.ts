@@ -11,7 +11,11 @@ async function bootstrap() {
   app.get(PrismaService).enableShutdownHooks(app);
   app.enableCors();
   app.use(morgan('dev'), helmet());
-  app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
+  app.useGlobalPipes(new ValidationPipe({ 
+    stopAtFirstError: true,
+    whitelist: true, 
+  }));
+  
   await app.listen(5000);
 }
 bootstrap();
