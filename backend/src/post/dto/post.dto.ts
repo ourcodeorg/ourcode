@@ -43,7 +43,7 @@ export class CreatePostDTO {
   user: User;
 
   @IsOptional()
-  userId: String;  
+  userId: String;
 }
 export class UpdatePostDto {
   @IsString()
@@ -84,5 +84,5 @@ export class UpdatePostDto {
   user?: User;
 
   @IsOptional()
-  userId?: string;  
+  userId?: string;
 }
