@@ -17,8 +17,8 @@ export class Postservice {
       return post;
     } catch {
       throw new HttpException(
-          "Could not create new post", 
-          HttpStatus.INTERNAL_SERVER_ERROR
+        "Could not create new post",
+        HttpStatus.INTERNAL_SERVER_ERROR
       )
     }
   }
@@ -50,18 +50,29 @@ export class Postservice {
   }
 
   async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
-     try {
-      const updatedPost = this.prisma.post.update({
-        where: { id },
-        data: updatePostDto
+    try {
+      const post = await this.prisma.post.findUniqueOrThrow({
+        where: { id }
       })
-      return updatedPost
-     } catch {
+      if (post.userId !== updatePostDto.user.id) {
         throw new HttpException(
-          "Post not found",
-          HttpStatus.NOT_FOUND
+          "Cannot update post of another user",
+          HttpStatus.UNAUTHORIZED
         )
-     }
+      } else {
+        delete updatePostDto.user
+        const updatedPost = this.prisma.post.update({
+          where: { id },
+          data: updatePostDto as unknown as Partial<Post>
+        })
+        return updatedPost
+      }
+    } catch {
+      throw new HttpException(
+        "Post not found",
+        HttpStatus.NOT_FOUND
+      )
+    }
   }
 
   async remove(id: string): Promise<Post> {

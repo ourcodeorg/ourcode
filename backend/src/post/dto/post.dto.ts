@@ -81,5 +81,8 @@ export class UpdatePostDto {
   link?: string;
 
   @IsObject()
-  user: object;
+  user?: User;
+
+  @IsOptional()
+  userId?: string;  
 }
