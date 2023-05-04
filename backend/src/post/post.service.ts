@@ -1,20 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
 import { PrismaService } from '../services/prisma/prisma.service';
 import { Post } from '@prisma/client';
 
 @Injectable()
 export class Postservice {
-  constructor(private prisma: PrismaService) {}
-  async create(createPostDto: CreatePostDTO) {
+  constructor(private prisma: PrismaService) { }
+
+  async create(createPostDto: CreatePostDTO): Promise<Post> {
     createPostDto.userId = createPostDto.user.id;
     delete createPostDto.user;
-    const post = await this.prisma.post.create({
-      data: {
-        ...createPostDto as unknown as Post,
-      },
-    });
-    return post;
+    try {
+      const post = await this.prisma.post.create({
+        data: createPostDto as unknown as Post
+      });
+      return post;
+    } catch {
+      throw new HttpException(
+          "Could not create new post", 
+          HttpStatus.INTERNAL_SERVER_ERROR
+      )
+    }
   }
 
   findAll() {
