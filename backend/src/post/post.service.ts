@@ -23,19 +23,58 @@ export class Postservice {
     }
   }
 
-  findAll() {
-    return `This action returns all project`;
+  async findAll(): Promise<Post[]> {
+    try {
+      const posts = await this.prisma.post.findMany()
+      return posts
+    } catch {
+      throw new HttpException(
+        "Could not find posts",
+        HttpStatus.NOT_FOUND
+      )
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`;
+  async findOne(id: string): Promise<Post> {
+    try {
+      const post = this.prisma.post.findUniqueOrThrow({
+        where: { id }
+      });
+      return post;
+    } catch {
+      throw new HttpException(
+        "Post not found",
+        HttpStatus.NOT_FOUND
+      )
+    }
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} project`;
+  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+     try {
+      const updatedPost = this.prisma.post.update({
+        where: { id },
+        data: updatePostDto
+      })
+      return updatedPost
+     } catch {
+        throw new HttpException(
+          "Post not found",
+          HttpStatus.NOT_FOUND
+        )
+     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+  async remove(id: string): Promise<Post> {
+    try {
+      const deletedPost = this.prisma.post.delete({
+        where: { id }
+      })
+      return deletedPost
+    } catch {
+      throw new HttpException(
+        "Post not found",
+        HttpStatus.NOT_FOUND
+      )
+    }
   }
 }
