@@ -23,9 +23,13 @@ export class Postservice {
     }
   }
 
-  async findAll(): Promise<Post[]> {
+  async findAll(page: number = 1, limit: number = 20): Promise<Post[]> {
     try {
-      const posts = await this.prisma.post.findMany();
+      const offset = (page -1) * limit;
+      const posts = await this.prisma.post.findMany({
+        take: limit,
+        skip: offset
+      });
       return posts;
     } catch {
       throw new HttpException('Could not find posts', HttpStatus.NOT_FOUND);

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { Postservice } from './post.service';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
@@ -20,8 +21,8 @@ export class Postcontroller {
   }
 
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  findAll(@Query() page?: string) {
+    return this.postService.findAll(+page);
   }
 
   @Get(':id')
