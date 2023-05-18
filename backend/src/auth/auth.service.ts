@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
-  CreateUserDto,
+  CreateUserDTO,
   LoginResponse,
-  LoginUserDto,
-  UpdateUserDto,
+  LoginUserDTO,
+  UpdateUserDTO,
   UserPayload,
-} from './entities/user.entity';
+} from './dto/user.dto';
 import * as bcrpyt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from 'src/constants';
@@ -16,7 +16,7 @@ import { User } from '@prisma/client';
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userDto: CreateUserDto): Promise<Partial<User>> {
+  async create(userDto: CreateUserDTO): Promise<Partial<User>> {
     const passwordHash = await bcrpyt.hash(userDto.password, 10);
     userDto.password = passwordHash;
     try {
@@ -34,7 +34,7 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginUserDto): Promise<LoginResponse> {
+  async login(loginDto: LoginUserDTO): Promise<LoginResponse> {
     try {
       const { username } = loginDto;
       const user = await this.prisma.user.findUniqueOrThrow({
@@ -67,7 +67,7 @@ export class AuthService {
   }
 
   async update(
-    updateUserDto: Partial<UpdateUserDto>,
+    updateUserDto: Partial<UpdateUserDTO>,
     id: string,
   ): Promise<User> {
     try {
