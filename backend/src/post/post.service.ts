@@ -29,6 +29,9 @@ export class Postservice {
       const posts = await this.prisma.post.findMany({
         take: limit,
         skip: offset,
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
       return posts;
     } catch {

@@ -26,6 +26,7 @@ model Post {
   description    String?  @db.VarChar(5000)
   skills         String[]
   progress       String
+  createdAt      DateTime @default(now())
   peopleRequired Int
   experience     String
   photo          String?
