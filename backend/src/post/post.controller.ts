@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { Postservice } from './post.service';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
+import { User } from '@prisma/client';
 
 @Controller('post')
 export class Postcontroller {
@@ -36,7 +37,7 @@ export class Postcontroller {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(id);
+  remove(@Param('id') id: string, @Body() user: User) {
+    return this.postService.remove(id, user);
   }
 }

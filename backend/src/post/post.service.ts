@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
 import { PrismaService } from '../services/prisma/prisma.service';
-import { Post } from '@prisma/client';
+import { Post, User } from '@prisma/client';
 
 @Injectable()
 export class Postservice {
@@ -25,10 +25,10 @@ export class Postservice {
 
   async findAll(page: number = 1, limit: number = 20): Promise<Post[]> {
     try {
-      const offset = (page -1) * limit;
+      const offset = (page - 1) * limit;
       const posts = await this.prisma.post.findMany({
         take: limit,
-        skip: offset
+        skip: offset,
       });
       return posts;
     } catch {
@@ -52,30 +52,40 @@ export class Postservice {
       const post = await this.prisma.post.findUniqueOrThrow({
         where: { id },
       });
-      if (post.userId !== updatePostDto.user.id) {
-        throw new HttpException(
-          'Cannot update post of another user',
-          HttpStatus.UNAUTHORIZED,
-        );
-      } else {
+      if (post.userId == updatePostDto.user.id) {
         delete updatePostDto.user;
         const updatedPost = this.prisma.post.update({
           where: { id },
           data: updatePostDto as unknown as Partial<Post>,
         });
         return updatedPost;
+      } else {
+        throw new HttpException(
+          'Cannot update post of another user',
+          HttpStatus.UNAUTHORIZED,
+        );
       }
     } catch {
       throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  async remove(id: string): Promise<Post> {
+  async remove(id: string, user: User): Promise<Post> {
     try {
-      const deletedPost = this.prisma.post.delete({
+      let post = await this.prisma.post.findUniqueOrThrow({
         where: { id },
       });
-      return deletedPost;
+      if (post.id == user.id) {
+        let deleted = await this.prisma.post.delete({
+          where: { id },
+        });
+        return deleted;
+      } else {
+        throw new HttpException(
+          'Cannot delete post of another user',
+          HttpStatus.FORBIDDEN,
+        );
+      }
     } catch {
       throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }

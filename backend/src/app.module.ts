@@ -23,12 +23,9 @@ export class AppModule implements NestModule {
       .exclude(
         { path: 'auth/(.*)', method: RequestMethod.GET },
         { path: 'auth/(.*)', method: RequestMethod.POST },
-        { path: 'post', method: RequestMethod.GET },
+        { path: 'post/(.*)', method: RequestMethod.GET },
         { path: '/', method: RequestMethod.GET },
-        {
-          path: '',
-          method: RequestMethod.GET,
-        },
+        { path: '', method: RequestMethod.GET },
       )
       .forRoutes('*');
   }
