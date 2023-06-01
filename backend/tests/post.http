@@ -1,0 +1,22 @@
+@url = http://localhost:5000
+@contentType = application/json
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsaWQ0MW94ajAwMDBsazJ1MngxbHJ2N24iLCJpYXQiOjE2ODU2MjIzOTEsImV4cCI6MTY5NTk5MDM5MX0.kd0Sa30LxcyK_VnKicxfkYFvBMCs0GwwGgFcUeOOxVI
+
+POST {{url}}/posts
+Authorization: {{token}}
+Content-Type: {{contentType}}
+
+{
+    "title": "Example Project",
+    "description": "Description of the example project",
+    "skills": ["nodejs", "rust"],
+    "progress": "ok",
+    "peopleRequired": 2,
+    "experience": "intermmediate"
+}
+
+###
+GET {{url}}/posts?page=1
+Content-Type: {{contentType}}
+Authorization: {{token}}
+

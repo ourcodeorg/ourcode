@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"]
 }
 
@@ -12,10 +12,25 @@ datasource db {
 }
 
 model User {
-  id String @id @unique @default(cuid())
-  username String @unique
-  email String @unique
-  password String 
+  id        String   @id @unique @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
   createdAt DateTime @default(now())
+  Post      Post[]
 }
 
+model Post {
+  id             String   @id @unique @default(cuid())
+  title          String   @db.VarChar(240)
+  description    String?  @db.VarChar(5000)
+  skills         String[]
+  progress       String
+  createdAt      DateTime @default(now())
+  peopleRequired Int
+  experience     String
+  photo          String?
+  userId         String
+  link           String?
+  user           User     @relation(fields: [userId], references: [id])
+}

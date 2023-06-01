@@ -8,11 +8,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './services/prisma/prisma.service';
 import { AuthModule } from './auth/auth.module';
-import { ProjectModule } from './project/project.module';
+import { PostModule } from './post/post.module';
 import { UserMiddleware } from './auth/middleware/user.middleware';
 
 @Module({
-  imports: [AuthModule, ProjectModule],
+  imports: [AuthModule, PostModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
@@ -23,12 +23,9 @@ export class AppModule implements NestModule {
       .exclude(
         { path: 'auth/(.*)', method: RequestMethod.GET },
         { path: 'auth/(.*)', method: RequestMethod.POST },
-
+        { path: 'posts/(.*)', method: RequestMethod.GET },
         { path: '/', method: RequestMethod.GET },
-        {
-          path: '',
-          method: RequestMethod.GET,
-        },
+        { path: '', method: RequestMethod.GET },
       )
       .forRoutes('*');
   }

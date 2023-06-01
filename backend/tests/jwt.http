@@ -1,7 +1,0 @@
-@url=http://localhost:5000
-# login and paste token here to try jwt verification
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsZjNobjE2NDAwMDBwYTFhemZoYm9nMGgiLCJpYXQiOjE2Nzg1NTU4MDJ9.mjuQHOFWH9P5WBVSfIXmWTlcl2JxXx8aKdGwihgBLL4
-
-###
-GET {{url}}
-Authorization: {{token}}
