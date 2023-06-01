@@ -12,7 +12,7 @@ import { Postservice } from './post.service';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
 import { User } from '@prisma/client';
 
-@Controller('post')
+@Controller('posts')
 export class Postcontroller {
   constructor(private readonly postService: Postservice) {}
 
@@ -22,8 +22,8 @@ export class Postcontroller {
   }
 
   @Get()
-  findAll(@Query() page?: string) {
-    return this.postService.findAll(+page);
+  findAll(@Query() q?: { page: string }) {
+    return this.postService.findAll(+q.page);
   }
 
   @Get(':id')
