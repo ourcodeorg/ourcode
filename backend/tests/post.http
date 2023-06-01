@@ -1,8 +1,8 @@
 @url = http://localhost:5000
 @contentType = application/json
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsaDYwd3d2ZDAwMDBxZTFhaTYxOW5qamwiLCJpYXQiOjE2ODMwMTcxMDAsImV4cCI6MTY5MzM4NTEwMH0.p_Ia-29s78r7FAuk7TygC_XE4VCj52MEkwNgD9lk0C8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsaWQ0MW94ajAwMDBsazJ1MngxbHJ2N24iLCJpYXQiOjE2ODU2MjIzOTEsImV4cCI6MTY5NTk5MDM5MX0.kd0Sa30LxcyK_VnKicxfkYFvBMCs0GwwGgFcUeOOxVI
 
-POST {{url}}/post
+POST {{url}}/posts
 Authorization: {{token}}
 Content-Type: {{contentType}}
 
@@ -14,3 +14,9 @@ Content-Type: {{contentType}}
     "peopleRequired": 2,
     "experience": "intermmediate"
 }
+
+###
+GET {{url}}/posts?page=1
+Content-Type: {{contentType}}
+Authorization: {{token}}
+
