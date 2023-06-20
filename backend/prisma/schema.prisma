@@ -12,25 +12,43 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique @default(cuid())
-  username  String   @unique
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  Post      Post[]
+  id          String        @id @unique @default(cuid())
+  username    String        @unique
+  email       String        @unique
+  password    String
+  createdAt   DateTime      @default(now())
+  Post        Post[]
+  Application Application[]
 }
 
 model Post {
-  id             String   @id @unique @default(cuid())
-  title          String   @db.VarChar(240)
-  description    String?  @db.VarChar(5000)
+  id             String        @id @unique @default(cuid())
+  title          String        @db.VarChar(240)
+  description    String?       @db.VarChar(5000)
   skills         String[]
   progress       String
-  createdAt      DateTime @default(now())
+  createdAt      DateTime      @default(now())
   peopleRequired Int
-  experience     String
+  experience     Experience
   photo          String?
   userId         String
   link           String?
-  user           User     @relation(fields: [userId], references: [id])
+  user           User          @relation(fields: [userId], references: [id])
+  Application    Application[]
+}
+
+model Application {
+  id        String   @id @unique @default(cuid())
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id])
+  applyer   User     @relation(fields: [userId], references: [id])
+  archived  Boolean
+  postId    String
+  userId    String
+}
+
+enum Experience {
+  beginner
+  interemmidiate
+  professional
 }
