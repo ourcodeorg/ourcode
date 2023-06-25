@@ -1,0 +1,18 @@
+@url = http://localhost:5000
+@contentType = application/json
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsamJnYmNyNDAwMDBxa2tmN3ZzcGwyeGwiLCJpYXQiOjE2ODc3MTg5MzEsImV4cCI6MTY5ODA4NjkzMX0.2b7eYKYu5LE-ztf-R93twUoh8SdukzMLjkU4YO6n6uM
+###
+GET {{url}}/applications/cljbgcdgr0002qkkfytt8i14k
+Authorization: {{token}}
+
+###
+PATCH {{url}}/applications/cljbgcdgr0002qkkfytt8i14k/archive
+Authorization: {{token}}
+
+###
+PATCH {{url}}/applications/cljbgcdgr0002qkkfytt8i14k/unarchive
+Authorization: {{token}}
+
+###
+DELETE {{url}}/applications/cljbgcdgr0002qkkfytt8i14k
+Authorization: {{token}}
