@@ -5,7 +5,7 @@ import { Application, Post, User } from '@prisma/client';
 
 @Injectable()
 export class ApplicationsService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(
     createApplicationDto: CreateApplicationDTO,

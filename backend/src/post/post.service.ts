@@ -1,11 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
 import { PrismaService } from '../services/prisma/prisma.service';
-import { Post, User } from '@prisma/client';
+import { Application, Post, User } from '@prisma/client';
+import { ApplicationsService } from 'src/applications/applications.service';
+import { CreateApplicationDTO } from 'src/applications/dto/application.dto';
 
 @Injectable()
 export class Postservice {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly applicationService: ApplicationsService,
+  ) {}
 
   async create(createPostDto: CreatePostDTO): Promise<Post> {
     createPostDto.userId = createPostDto.user.id;
@@ -86,6 +91,30 @@ export class Postservice {
       } else {
         throw new HttpException(
           'Cannot delete post of another user',
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    } catch {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async apply(
+    createApplicationDTO: CreateApplicationDTO,
+  ): Promise<Application> {
+    return await this.applicationService.create(createApplicationDTO);
+  }
+
+  async getApplications(id: string, user: User): Promise<Application[]> {
+    try {
+      const post: Post = await this.prisma.post.findUniqueOrThrow({
+        where: { id },
+      });
+      if (post.userId === user.id) {
+        return await this.applicationService.getApplicationsByPostId(id);
+      } else {
+        throw new HttpException(
+          'Cannot see applications for post that is not yours',
           HttpStatus.FORBIDDEN,
         );
       }

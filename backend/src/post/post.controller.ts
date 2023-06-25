@@ -11,6 +11,7 @@ import {
 import { Postservice } from './post.service';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
 import { User } from '@prisma/client';
+import { CreateApplicationDTO } from 'src/applications/dto/application.dto';
 
 @Controller('posts')
 export class Postcontroller {
@@ -40,4 +41,15 @@ export class Postcontroller {
   remove(@Param('id') id: string, @Body() user: User) {
     return this.postService.remove(id, user);
   }
+
+  @Post(':id/apply')
+  apply(
+    @Param('id') id: string,
+    @Body() createApplicationDTO: CreateApplicationDTO,
+  ) {
+    return this.postService.apply(createApplicationDTO);
+  }
+
+  @Get(':id/applications')
+  getApplications(@Param('id') id: string, @Body() user: User) {}
 }

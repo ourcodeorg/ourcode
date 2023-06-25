@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
 import {
-  CreateApplicationDTO,
+  ArchiveApplicationDTO,
   DeleteApplicationDTO,
 } from './dto/application.dto';
 
@@ -12,6 +20,22 @@ export class ApplicationsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.applicationsService.findOne(id);
+  }
+
+  @Patch(':id/archive')
+  archive(
+    @Param('id') id: string,
+    @Body() archiveApplicationDto: ArchiveApplicationDTO,
+  ) {
+    return this.applicationsService.archive(id, archiveApplicationDto.user);
+  }
+
+  @Patch(':id/unarchive')
+  unarchive(
+    @Param('id') id: string,
+    @Body() archiveApplicationDto: ArchiveApplicationDTO,
+  ) {
+    return this.applicationsService.unarchive(id, archiveApplicationDto.user);
   }
 
   @Delete(':id')

@@ -10,9 +10,6 @@ export class CreateApplicationDTO {
 }
 
 export class ArchiveApplicationDTO {
-  @IsBoolean()
-  archived: boolean;
-
   @IsObject()
   user: User;
 }
