@@ -115,7 +115,7 @@ export class Postservice {
         return await this.applicationService.getApplicationsByPostId(id);
       } else {
         return new HttpException(
-          'Cannot see applications for post that is not yours',
+          'Cannot see applications of post that is not yours',
           HttpStatus.FORBIDDEN,
         );
       }

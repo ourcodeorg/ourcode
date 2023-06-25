@@ -1,6 +1,6 @@
 @url = http://localhost:5000
 @contentType = application/json
-@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsamJnYmNyNDAwMDBxa2tmN3ZzcGwyeGwiLCJpYXQiOjE2ODc2OTg4NTMsImV4cCI6MTY5ODA2Njg1M30.128nUKnbbHhxJUMZ8SQqjOLqG3161Zuxqtb1HLUPdws
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsamJhdmtiZzAwMDBucGc1aGVqZnV4Z2siLCJpYXQiOjE2ODc3MTc3NDYsImV4cCI6MTY5ODA4NTc0Nn0.opQdEQ0pigpnHVlmVBadVoAZcSw-mOy7zeCri0tJfTg
 POST {{url}}/posts
 Authorization: {{token}}
 Content-Type: {{contentType}}

@@ -52,6 +52,6 @@ export class Postcontroller {
 
   @Get(':id/applications')
   getApplications(@Param('id') id: string, @Body() body: any) {
-    this.postService.getApplications(id, body.user);
+    return this.postService.getApplications(id, body.user);
   }
 }
