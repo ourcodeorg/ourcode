@@ -82,7 +82,4 @@ export class UpdatePostDto {
 
   @IsObject()
   user?: User;
-
-  @IsOptional()
-  userId?: string;
 }
