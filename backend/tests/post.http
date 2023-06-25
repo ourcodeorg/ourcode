@@ -1,7 +1,6 @@
 @url = http://localhost:5000
 @contentType = application/json
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsaWQ0MW94ajAwMDBsazJ1MngxbHJ2N24iLCJpYXQiOjE2ODU2MjIzOTEsImV4cCI6MTY5NTk5MDM5MX0.kd0Sa30LxcyK_VnKicxfkYFvBMCs0GwwGgFcUeOOxVI
-
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNsamJnYmNyNDAwMDBxa2tmN3ZzcGwyeGwiLCJpYXQiOjE2ODc2OTg4NTMsImV4cCI6MTY5ODA2Njg1M30.128nUKnbbHhxJUMZ8SQqjOLqG3161Zuxqtb1HLUPdws
 POST {{url}}/posts
 Authorization: {{token}}
 Content-Type: {{contentType}}
@@ -12,7 +11,7 @@ Content-Type: {{contentType}}
     "skills": ["nodejs", "rust"],
     "progress": "ok",
     "peopleRequired": 2,
-    "experience": "intermmediate"
+    "experience": "intermediate"
 }
 
 ###
@@ -20,3 +19,19 @@ GET {{url}}/posts?page=1
 Content-Type: {{contentType}}
 Authorization: {{token}}
 
+###
+PATCH  {{url}}/posts/cljbfay2s0002qk1ar68ewyvi
+Authorization: {{token}}
+Content-Type: {{contentType}}
+
+{
+    "title": "Updated Title"
+}
+
+###
+POST {{url}}/posts/cljbfay2s0002qk1ar68ewyvi/apply
+Authorization: {{token}}
+
+###
+GET {{url}}/posts/cljbfay2s0002qk1ar68ewyvi/applications
+Authorization: {{token}}

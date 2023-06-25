@@ -10,7 +10,7 @@ export class Postservice {
   constructor(
     private prisma: PrismaService,
     private readonly applicationService: ApplicationsService,
-  ) {}
+  ) { }
 
   async create(createPostDto: CreatePostDTO): Promise<Post> {
     createPostDto.userId = createPostDto.user.id;
@@ -55,7 +55,7 @@ export class Postservice {
     }
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+  async update(id: string, updatePostDto: UpdatePostDto) {
     try {
       const post = await this.prisma.post.findUniqueOrThrow({
         where: { id },
@@ -78,7 +78,7 @@ export class Postservice {
     }
   }
 
-  async remove(id: string, user: User): Promise<Post> {
+  async remove(id: string, user: User) {
     try {
       let post = await this.prisma.post.findUniqueOrThrow({
         where: { id },
@@ -89,7 +89,7 @@ export class Postservice {
         });
         return deleted;
       } else {
-        throw new HttpException(
+        return new HttpException(
           'Cannot delete post of another user',
           HttpStatus.FORBIDDEN,
         );
@@ -100,12 +100,13 @@ export class Postservice {
   }
 
   async apply(
+    id: string,
     createApplicationDTO: CreateApplicationDTO,
-  ): Promise<Application> {
-    return await this.applicationService.create(createApplicationDTO);
+  ) {
+    return await this.applicationService.create(id, createApplicationDTO);
   }
 
-  async getApplications(id: string, user: User): Promise<Application[]> {
+  async getApplications(id: string, user: User) {
     try {
       const post: Post = await this.prisma.post.findUniqueOrThrow({
         where: { id },
@@ -113,13 +114,13 @@ export class Postservice {
       if (post.userId === user.id) {
         return await this.applicationService.getApplicationsByPostId(id);
       } else {
-        throw new HttpException(
+        return new HttpException(
           'Cannot see applications for post that is not yours',
           HttpStatus.FORBIDDEN,
         );
       }
     } catch {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+      return new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
   }
 }

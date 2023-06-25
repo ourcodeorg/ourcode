@@ -47,9 +47,11 @@ export class Postcontroller {
     @Param('id') id: string,
     @Body() createApplicationDTO: CreateApplicationDTO,
   ) {
-    return this.postService.apply(createApplicationDTO);
+    return this.postService.apply(id, createApplicationDTO);
   }
 
   @Get(':id/applications')
-  getApplications(@Param('id') id: string, @Body() user: User) {}
+  getApplications(@Param('id') id: string, @Body() body: any) {
+    this.postService.getApplications(id, body.user);
+  }
 }

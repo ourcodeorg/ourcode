@@ -49,6 +49,6 @@ model Application {
 
 enum Experience {
   beginner
-  interemmidiate
+  intermediate
   professional
 }

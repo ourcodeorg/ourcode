@@ -2,9 +2,6 @@ import { User } from '@prisma/client';
 import { IsBoolean, IsObject, IsString } from 'class-validator';
 
 export class CreateApplicationDTO {
-  @IsString()
-  postId: string;
-
   @IsObject()
   user: User;
 }

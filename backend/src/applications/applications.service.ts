@@ -8,27 +8,28 @@ export class ApplicationsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(
+    id: string,
     createApplicationDto: CreateApplicationDTO,
-  ): Promise<Application> {
+  ) {
     try {
       let existingApplication: Application =
         await this.prismaService.application.findFirst({
           where: {
             userId: createApplicationDto.user.id,
-            postId: createApplicationDto.postId,
+            postId: id,
           },
         });
       if (existingApplication) {
-        throw new HttpException(
+        return new HttpException(
           'Already applied to post',
           HttpStatus.FORBIDDEN,
         );
       }
       const post: Post = await this.prismaService.post.findUniqueOrThrow({
-        where: { id: createApplicationDto.postId },
+        where: { id },
       });
-      if (post.id === createApplicationDto.user.id) {
-        throw new HttpException(
+      if (post.userId === createApplicationDto.user.id) {
+        return new HttpException(
           'Cannot apply to own post',
           HttpStatus.NOT_ACCEPTABLE,
         );
@@ -43,21 +44,21 @@ export class ApplicationsService {
         });
       return application;
     } catch {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+      return new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  async findOne(id: string): Promise<Application> {
+  async findOne(id: string) {
     try {
       return await this.prismaService.application.findUniqueOrThrow({
         where: { id },
       });
     } catch {
-      throw new HttpException('Application not found', HttpStatus.NOT_FOUND);
+      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  async remove(id: string, user: User): Promise<Application> {
+  async remove(id: string, user: User) {
     try {
       const application: Application =
         await this.prismaService.application.findUniqueOrThrow({
@@ -66,17 +67,17 @@ export class ApplicationsService {
       if (application.userId === user.id) {
         return await this.prismaService.application.delete({ where: { id } });
       } else {
-        throw new HttpException(
+        return new HttpException(
           "Cannot delete someone else's application",
           HttpStatus.FORBIDDEN,
         );
       }
     } catch {
-      throw new HttpException('Application not found', HttpStatus.NOT_FOUND);
+      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  async archive(id: string, user: User): Promise<Application> {
+  async archive(id: string, user: User) {
     try {
       const application: Application =
         await this.prismaService.application.findUniqueOrThrow({
@@ -91,17 +92,17 @@ export class ApplicationsService {
           data: { archived: true },
         });
       } else {
-        throw new HttpException(
+        return new HttpException(
           'Cannot archive application of post you are not the owner of',
           HttpStatus.FORBIDDEN,
         );
       }
     } catch {
-      throw new HttpException('Application not found', HttpStatus.NOT_FOUND);
+      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  async unarchive(id: string, user: User): Promise<Application> {
+  async unarchive(id: string, user: User) {
     try {
       const application: Application =
         await this.prismaService.application.findUniqueOrThrow({
@@ -116,17 +117,17 @@ export class ApplicationsService {
           data: { archived: false },
         });
       } else {
-        throw new HttpException(
+        return new HttpException(
           'Cannot unarchive application of post you are not the owner of',
           HttpStatus.FORBIDDEN,
         );
       }
     } catch {
-      throw new HttpException('Application not found', HttpStatus.NOT_FOUND);
+      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  async getApplicationsByPostId(postId: string): Promise<Application[]> {
+  async getApplicationsByPostId(postId: string) {
     try {
       const applications: Application[] =
         await this.prismaService.application.findMany({
@@ -134,7 +135,7 @@ export class ApplicationsService {
         });
       return applications;
     } catch {
-      throw new HttpException(
+      return new HttpException(
         'Could not fetch applications for the post',
         HttpStatus.NOT_FOUND,
       );
