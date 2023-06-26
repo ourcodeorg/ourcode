@@ -10,6 +10,7 @@ import {
 import { ApplicationsService } from './applications.service';
 import {
   ArchiveApplicationDTO,
+  CreateApplicationDTO,
   DeleteApplicationDTO,
 } from './dto/application.dto';
 
@@ -36,6 +37,14 @@ export class ApplicationsController {
     @Body() archiveApplicationDto: ArchiveApplicationDTO,
   ) {
     return this.applicationsService.unarchive(id, archiveApplicationDto.user);
+  }
+
+  @Patch(':id/approve')
+  approve(
+    @Param('id') id: string,
+    @Body() createApplicationDTO: CreateApplicationDTO,
+  ) {
+    return this.applicationsService.approveApplication(id, createApplicationDTO.user);
   }
 
   @Delete(':id')

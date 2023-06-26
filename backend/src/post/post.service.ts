@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
 import { PrismaService } from '../services/prisma/prisma.service';
-import { Application, Post, User } from '@prisma/client';
+import { Post, User } from '@prisma/client';
 import { ApplicationsService } from 'src/applications/applications.service';
 import { CreateApplicationDTO } from 'src/applications/dto/application.dto';
 
@@ -10,7 +10,7 @@ export class Postservice {
   constructor(
     private prisma: PrismaService,
     private readonly applicationService: ApplicationsService,
-  ) { }
+  ) {}
 
   async create(createPostDto: CreatePostDTO): Promise<Post> {
     createPostDto.userId = createPostDto.user.id;
@@ -68,7 +68,7 @@ export class Postservice {
         });
         return updatedPost;
       } else {
-        throw new HttpException(
+        return new HttpException(
           'Cannot update post of another user',
           HttpStatus.UNAUTHORIZED,
         );
@@ -99,10 +99,7 @@ export class Postservice {
     }
   }
 
-  async apply(
-    id: string,
-    createApplicationDTO: CreateApplicationDTO,
-  ) {
+  async apply(id: string, createApplicationDTO: CreateApplicationDTO) {
     return await this.applicationService.create(id, createApplicationDTO);
   }
 

@@ -29,6 +29,8 @@ model Post {
   progress       String
   createdAt      DateTime      @default(now())
   peopleRequired Int
+  peopleApplied  Int           @default(0)
+  peopleAccepted Int           @default(0)
   experience     Experience
   photo          String?
   userId         String
@@ -42,7 +44,8 @@ model Application {
   createdAt DateTime @default(now())
   post      Post     @relation(fields: [postId], references: [id])
   applyer   User     @relation(fields: [userId], references: [id])
-  archived  Boolean
+  archived  Boolean  @default(false)
+  approved  Boolean  @default(false)
   postId    String
   userId    String
 }

@@ -7,10 +7,7 @@ import { Application, Post, User } from '@prisma/client';
 export class ApplicationsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(
-    id: string,
-    createApplicationDto: CreateApplicationDTO,
-  ) {
+  async create(id: string, createApplicationDto: CreateApplicationDTO) {
     try {
       let existingApplication: Application =
         await this.prismaService.application.findFirst({
@@ -39,9 +36,14 @@ export class ApplicationsService {
           data: {
             postId: post.id,
             userId: createApplicationDto.user.id,
-            archived: false,
           },
         });
+      await this.prismaService.post.update({
+        where: { id: post.id },
+        data: {
+          peopleApplied: { increment: 1 },
+        },
+      });
       return application;
     } catch {
       return new HttpException('Post not found', HttpStatus.NOT_FOUND);
@@ -121,6 +123,35 @@ export class ApplicationsService {
           'Cannot unarchive application of post you are not the owner of',
           HttpStatus.FORBIDDEN,
         );
+      }
+    } catch {
+      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async approveApplication(id: string, user: User) {
+    try {
+      const application: Application =
+        await this.prismaService.application.findUniqueOrThrow({
+          where: { id },
+        });
+      const post: Post = await this.prismaService.post.findUnique({
+        where: { id: application.postId },
+      });
+      if (post) {
+        if (post.userId === user.id) {
+          await this.prismaService.application.update({
+            where: { id },
+            data: { approved: true },
+          });
+        } else {
+          return new HttpException(
+            'Cannot approve application unless you created the post',
+            HttpStatus.FORBIDDEN,
+          );
+        }
+      } else {
+        return new HttpException('Post not found', HttpStatus.NOT_FOUND);
       }
     } catch {
       return new HttpException('Application not found', HttpStatus.NOT_FOUND);

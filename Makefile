@@ -11,7 +11,6 @@ env:
 	cd ./backend && pnpm install
 	cd ./frontend && pnpm install
 	cd ./backend && npx prisma migrate dev
-	rm ./backend/.env
 	docker compose stop ourcode-db
 
 down:
