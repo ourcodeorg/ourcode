@@ -1,4 +1,4 @@
-import { IsEmail, IsString } from 'class-validator';
+import { IsEmail, IsObject, IsString } from 'class-validator';
 import { User } from '@prisma/client';
 import { JwtPayload } from 'jsonwebtoken';
 
@@ -9,6 +9,11 @@ export interface UserPayload extends JwtPayload {
 export interface LoginResponse {
   user: Partial<User>;
   token: string;
+}
+
+export class UserActionDTO {
+  @IsObject()
+  user: User;
 }
 
 export class CreateUserDTO {
@@ -36,4 +41,7 @@ export class UpdateUserDTO {
 
   @IsString()
   password: string;
+
+  @IsObject()
+  user: User;
 }

@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDTO, UpdateUserDTO, LoginUserDTO } from './dto/user.dto';
+import { CreateUserDTO, UpdateUserDTO, LoginUserDTO, UserActionDTO } from './dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,7 +40,7 @@ export class AuthController {
   }
 
   @Delete('users/:id')
-  async delete(@Param('id') id: string) {
-    return await this.authService.remove(id);
+  async delete(@Param('id') id: string, @Body() userAction: UserActionDTO) {
+    return await this.authService.remove(id, userAction.user);
   }
 }

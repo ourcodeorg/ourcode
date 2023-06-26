@@ -11,6 +11,7 @@ import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from 'src/constants';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 import { User } from '@prisma/client';
+import { HttpError } from 'src/error';
 
 @Injectable()
 export class AuthService {
@@ -71,20 +72,35 @@ export class AuthService {
     id: string,
   ): Promise<User> {
     try {
+      const user: User = await this.prisma.user.findUnique({
+        where: { id },
+      });
+      if (!user) throw new HttpError('User not found', HttpStatus.NOT_FOUND);
+      if (updateUserDto.user.id !== id) {
+        throw new HttpError('Cannot update other users', HttpStatus.FORBIDDEN);
+      }
+      delete updateUserDto.user;
       if (updateUserDto.password !== undefined) {
         const passwordHash = await bcrpyt.hash(updateUserDto.password, 10);
         updateUserDto.password = passwordHash;
       }
-      const user: User = await this.prisma.user.update({
+      const updatedUser: User = await this.prisma.user.update({
         where: {
           id,
         },
         data: updateUserDto,
       });
-      delete user.password;
-      return user;
-    } catch {
-      throw new HttpException('User does not exists', HttpStatus.BAD_REQUEST);
+      delete updatedUser.password;
+      return updatedUser;
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
@@ -120,14 +136,30 @@ export class AuthService {
     }
   }
 
-  async remove(id: string): Promise<User> {
+  async remove(id: string, user: User): Promise<User> {
     try {
-      const user: User = await this.prisma.user.delete({
+      const existingUser = await this.prisma.user.findUnique({
+        where: { id },
+      });
+      if (!existingUser) {
+        throw new HttpError('User not found', HttpStatus.NOT_FOUND);
+      }
+      if (existingUser.id !== user.id) {
+        throw new HttpError('Cannot remove another user', HttpStatus.FORBIDDEN);
+      }
+      const d: User = await this.prisma.user.delete({
         where: { id: id },
       });
-      return user;
-    } catch {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      return d;
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
