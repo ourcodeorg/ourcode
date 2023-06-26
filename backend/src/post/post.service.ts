@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
 import { PrismaService } from '../services/prisma/prisma.service';
-import { Post, User } from '@prisma/client';
+import { Application, Post, User } from '@prisma/client';
 import { ApplicationsService } from 'src/applications/applications.service';
 import { CreateApplicationDTO } from 'src/applications/dto/application.dto';
+import { HttpError } from 'src/error';
 
 @Injectable()
 export class Postservice {
@@ -55,11 +56,12 @@ export class Postservice {
     }
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto) {
+  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
     try {
-      const post = await this.prisma.post.findUniqueOrThrow({
+      const post = await this.prisma.post.findUnique({
         where: { id },
       });
+      if (!post) throw new HttpError('Post not found', HttpStatus.NOT_FOUND);
       if (post.userId == updatePostDto.user.id) {
         delete updatePostDto.user;
         const updatedPost = this.prisma.post.update({
@@ -68,34 +70,49 @@ export class Postservice {
         });
         return updatedPost;
       } else {
-        return new HttpException(
+        throw new HttpError(
           'Cannot update post of another user',
           HttpStatus.UNAUTHORIZED,
         );
       }
-    } catch {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
-  async remove(id: string, user: User) {
+  async remove(id: string, user: User): Promise<Post> {
     try {
-      let post = await this.prisma.post.findUniqueOrThrow({
+      let post = await this.prisma.post.findUnique({
         where: { id },
       });
+      if (!post) throw new HttpError('Post not found', HttpStatus.NOT_FOUND);
       if (post.id == user.id) {
         let deleted = await this.prisma.post.delete({
           where: { id },
         });
         return deleted;
       } else {
-        return new HttpException(
+        throw new HttpError(
           'Cannot delete post of another user',
           HttpStatus.FORBIDDEN,
         );
       }
-    } catch {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
@@ -103,21 +120,29 @@ export class Postservice {
     return await this.applicationService.create(id, createApplicationDTO);
   }
 
-  async getApplications(id: string, user: User) {
+  async getApplications(id: string, user: User): Promise<Application[]> {
     try {
-      const post: Post = await this.prisma.post.findUniqueOrThrow({
+      const post: Post = await this.prisma.post.findUnique({
         where: { id },
       });
+      if (!post) throw new HttpError('Post not found', HttpStatus.NOT_FOUND);
       if (post.userId === user.id) {
         return await this.applicationService.getApplicationsByPostId(id);
       } else {
-        return new HttpException(
+        throw new HttpError(
           'Cannot see applications of post that is not yours',
           HttpStatus.FORBIDDEN,
         );
       }
-    } catch {
-      return new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 }

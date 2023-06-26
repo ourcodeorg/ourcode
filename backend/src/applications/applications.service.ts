@@ -7,7 +7,7 @@ import { error } from 'console';
 
 @Injectable()
 export class ApplicationsService {
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async create(
     id: string,
@@ -129,7 +129,6 @@ export class ApplicationsService {
     }
   }
 
-
   async unarchive(id: string, user: User) {
     try {
       const application: Application =
@@ -170,7 +169,8 @@ export class ApplicationsService {
         await this.prismaService.application.findUnique({
           where: { id },
         });
-      if (!application) throw new HttpError("Application not found", HttpStatus.NOT_FOUND);
+      if (!application)
+        throw new HttpError('Application not found', HttpStatus.NOT_FOUND);
       const post: Post = await this.prismaService.post.findUnique({
         where: { id: application.postId },
       });
@@ -181,16 +181,22 @@ export class ApplicationsService {
             data: { approved: true },
           });
         } else {
-          throw new HttpError('Cannot approve application unless you created the post', HttpStatus.FORBIDDEN);
+          throw new HttpError(
+            'Cannot approve application unless you created the post',
+            HttpStatus.FORBIDDEN,
+          );
         }
       } else {
         throw new HttpError('Post not found', HttpStatus.NOT_FOUND);
       }
-    } catch(error) {
+    } catch (error) {
       if (error instanceof HttpError) {
         throw new HttpException(error.message, error.statusCode);
       } else {
-        throw new HttpException("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
     }
   }
@@ -203,7 +209,7 @@ export class ApplicationsService {
         });
       return applications;
     } catch {
-      throw new HttpException(
+      throw new HttpError(
         'Could not fetch applications for the post',
         HttpStatus.NOT_FOUND,
       );
