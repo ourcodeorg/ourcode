@@ -2,12 +2,17 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateApplicationDTO } from './dto/application.dto';
 import { PrismaService } from 'src/services/prisma/prisma.service';
 import { Application, Post, User } from '@prisma/client';
+import { HttpError } from 'src/error';
+import { error } from 'console';
 
 @Injectable()
 export class ApplicationsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
-  async create(id: string, createApplicationDto: CreateApplicationDTO) {
+  async create(
+    id: string,
+    createApplicationDto: CreateApplicationDTO,
+  ): Promise<Application> {
     try {
       let existingApplication: Application =
         await this.prismaService.application.findFirst({
@@ -17,19 +22,14 @@ export class ApplicationsService {
           },
         });
       if (existingApplication) {
-        return new HttpException(
-          'Already applied to post',
-          HttpStatus.FORBIDDEN,
-        );
+        throw new HttpError('Already applied to post', HttpStatus.CONFLICT);
       }
-      const post: Post = await this.prismaService.post.findUniqueOrThrow({
+      const post: Post = await this.prismaService.post.findUnique({
         where: { id },
       });
+      if (!post) throw new HttpError('Post not found', HttpStatus.NOT_FOUND);
       if (post.userId === createApplicationDto.user.id) {
-        return new HttpException(
-          'Cannot apply to own post',
-          HttpStatus.NOT_ACCEPTABLE,
-        );
+        throw new HttpError('Cannot apply to own post', HttpStatus.CONFLICT);
       }
       const application: Application =
         await this.prismaService.application.create({
@@ -45,46 +45,64 @@ export class ApplicationsService {
         },
       });
       return application;
-    } catch {
-      return new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal Server Error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Application> {
     try {
       return await this.prismaService.application.findUniqueOrThrow({
         where: { id },
       });
     } catch {
-      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Application not found', HttpStatus.NOT_FOUND);
     }
   }
 
   async remove(id: string, user: User) {
     try {
       const application: Application =
-        await this.prismaService.application.findUniqueOrThrow({
+        await this.prismaService.application.findUnique({
           where: { id },
         });
+      if (!application)
+        throw new HttpError('Application not found', HttpStatus.NOT_FOUND);
       if (application.userId === user.id) {
         return await this.prismaService.application.delete({ where: { id } });
       } else {
-        return new HttpException(
-          "Cannot delete someone else's application",
+        throw new HttpError(
+          'Cannot delete someone elses application',
           HttpStatus.FORBIDDEN,
         );
       }
     } catch {
-      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
   async archive(id: string, user: User) {
     try {
       const application: Application =
-        await this.prismaService.application.findUniqueOrThrow({
+        await this.prismaService.application.findUnique({
           where: { id },
         });
+      if (!application)
+        throw new HttpError('Application not found', HttpStatus.NOT_FOUND);
       const post: Post = await this.prismaService.post.findUniqueOrThrow({
         where: { id: application.postId },
       });
@@ -94,22 +112,32 @@ export class ApplicationsService {
           data: { archived: true },
         });
       } else {
-        return new HttpException(
+        throw new HttpError(
           'Cannot archive application of post you are not the owner of',
           HttpStatus.FORBIDDEN,
         );
       }
-    } catch {
-      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
+
 
   async unarchive(id: string, user: User) {
     try {
       const application: Application =
-        await this.prismaService.application.findUniqueOrThrow({
+        await this.prismaService.application.findUnique({
           where: { id },
         });
+      if (!application)
+        throw new HttpError('Application not found', HttpStatus.NOT_FOUND);
       const post: Post = await this.prismaService.post.findUniqueOrThrow({
         where: { id: application.postId },
       });
@@ -119,22 +147,30 @@ export class ApplicationsService {
           data: { archived: false },
         });
       } else {
-        return new HttpException(
-          'Cannot unarchive application of post you are not the owner of',
+        throw new HttpError(
+          'Cannot archive application of post you are not the owner of',
           HttpStatus.FORBIDDEN,
         );
       }
-    } catch {
-      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
   async approveApplication(id: string, user: User) {
     try {
       const application: Application =
-        await this.prismaService.application.findUniqueOrThrow({
+        await this.prismaService.application.findUnique({
           where: { id },
         });
+      if (!application) throw new HttpError("Application not found", HttpStatus.NOT_FOUND);
       const post: Post = await this.prismaService.post.findUnique({
         where: { id: application.postId },
       });
@@ -145,20 +181,21 @@ export class ApplicationsService {
             data: { approved: true },
           });
         } else {
-          return new HttpException(
-            'Cannot approve application unless you created the post',
-            HttpStatus.FORBIDDEN,
-          );
+          throw new HttpError('Cannot approve application unless you created the post', HttpStatus.FORBIDDEN);
         }
       } else {
-        return new HttpException('Post not found', HttpStatus.NOT_FOUND);
+        throw new HttpError('Post not found', HttpStatus.NOT_FOUND);
       }
-    } catch {
-      return new HttpException('Application not found', HttpStatus.NOT_FOUND);
+    } catch(error) {
+      if (error instanceof HttpError) {
+        throw new HttpException(error.message, error.statusCode);
+      } else {
+        throw new HttpException("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
   }
 
-  async getApplicationsByPostId(postId: string) {
+  async getApplicationsByPostId(postId: string): Promise<Application[]> {
     try {
       const applications: Application[] =
         await this.prismaService.application.findMany({
@@ -166,7 +203,7 @@ export class ApplicationsService {
         });
       return applications;
     } catch {
-      return new HttpException(
+      throw new HttpException(
         'Could not fetch applications for the post',
         HttpStatus.NOT_FOUND,
       );

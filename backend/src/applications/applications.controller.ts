@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Patch,
-} from '@nestjs/common';
+import { Controller, Get, Body, Param, Delete, Patch } from '@nestjs/common';
 import { ApplicationsService } from './applications.service';
 import {
   ArchiveApplicationDTO,
@@ -44,7 +36,10 @@ export class ApplicationsController {
     @Param('id') id: string,
     @Body() createApplicationDTO: CreateApplicationDTO,
   ) {
-    return this.applicationsService.approveApplication(id, createApplicationDTO.user);
+    return this.applicationsService.approveApplication(
+      id,
+      createApplicationDTO.user,
+    );
   }
 
   @Delete(':id')
