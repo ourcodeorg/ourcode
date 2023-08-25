@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateApplicationDTO } from './dto/application.dto';
-import { PrismaService } from 'src/services/prisma/prisma.service';
+import { PrismaService } from 'src/database/prisma.service';
 import { Application, Post, User } from '@prisma/client';
 import { HttpError } from 'src/error';
 
@@ -77,7 +77,7 @@ export class ApplicationsService {
       if (application.userId === user.id) {
         this.prismaService.post.update({
           where: { id: application.postId },
-          data: { peopleApplied: { decrement: 1 } }
+          data: { peopleApplied: { decrement: 1 } },
         });
         return await this.prismaService.application.delete({ where: { id } });
       } else {
@@ -86,7 +86,7 @@ export class ApplicationsService {
           HttpStatus.FORBIDDEN,
         );
       }
-    } catch(error) {
+    } catch (error) {
       if (error instanceof HttpError) {
         throw new HttpException(error.message, error.statusCode);
       } else {
@@ -179,10 +179,10 @@ export class ApplicationsService {
       });
       if (post) {
         if (post.userId === user.id) {
-          this.prismaService.post.update({ 
+          this.prismaService.post.update({
             where: { id: post.id },
-            data: { peopleAccepted: { increment: 1 } }
-          })
+            data: { peopleAccepted: { increment: 1 } },
+          });
           return await this.prismaService.application.update({
             where: { id },
             data: { approved: true },

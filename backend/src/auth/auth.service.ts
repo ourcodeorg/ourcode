@@ -9,7 +9,7 @@ import {
 import * as bcrpyt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from 'src/constants';
-import { PrismaService } from 'src/services/prisma/prisma.service';
+import { PrismaService } from 'src/database/prisma.service';
 import { User } from '@prisma/client';
 import { HttpError } from 'src/error';
 
