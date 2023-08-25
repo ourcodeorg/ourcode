@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDTO, UpdatePostDto } from './dto/post.dto';
-import { PrismaService } from '../services/prisma/prisma.service';
+import { PrismaService } from '../database/prisma.service';
 import { Application, Post, User } from '@prisma/client';
 import { ApplicationsService } from 'src/applications/applications.service';
 import { CreateApplicationDTO } from 'src/applications/dto/application.dto';

@@ -11,7 +11,7 @@ A platform for devs and students to collaborate on projects or research.
 
 ## Tech Stack
 
-- FE: React/Next, mantine, tailwind
+- FE: React/Next, daisyUI, tailwind
 - Backend: Nest (Render), Prisma, PSQL
 
 ## Build Steps
@@ -64,13 +64,10 @@ If these techniques do not work on your windows pc, try the following:
     - Main branch is the production branch
     - To add features or bug fixes, create a new branch for it
 
-## Team Members
+## Contributors
 
-You can join this project by messaging **0xSH1V4M#8886** or **Holy Spirit#5707.** Cybersecurity people are also welcome as this is a good opportunity to work with developers and find bugs in a real world app. 
+- [ujjwal-kr](https://github.com/ujjwal-kr) [Lead]
 
-### Developers:
-
-- [ujjwal-kr](https://github.com/ujjwal-kr)
 - [Gurpal](https://github.com/phantomknight287)
 - [Shivam](https://github.com/shivam1317)
 - [Yogesh](https://bit.ly/github_KYogesh20)

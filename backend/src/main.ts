@@ -3,7 +3,7 @@ import * as morgan from 'morgan';
 import './constants/index';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
-import { PrismaService } from './services/prisma/prisma.service';
+import { PrismaService } from './database/prisma.service';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {

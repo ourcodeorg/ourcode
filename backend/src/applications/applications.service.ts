@@ -1,9 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateApplicationDTO } from './dto/application.dto';
-import { PrismaService } from 'src/services/prisma/prisma.service';
+import { PrismaService } from 'src/database/prisma.service';
 import { Application, Post, User } from '@prisma/client';
 import { HttpError } from 'src/error';
-import { error } from 'console';
 
 @Injectable()
 export class ApplicationsService {
@@ -76,6 +75,10 @@ export class ApplicationsService {
       if (!application)
         throw new HttpError('Application not found', HttpStatus.NOT_FOUND);
       if (application.userId === user.id) {
+        this.prismaService.post.update({
+          where: { id: application.postId },
+          data: { peopleApplied: { decrement: 1 } },
+        });
         return await this.prismaService.application.delete({ where: { id } });
       } else {
         throw new HttpError(
@@ -83,7 +86,7 @@ export class ApplicationsService {
           HttpStatus.FORBIDDEN,
         );
       }
-    } catch {
+    } catch (error) {
       if (error instanceof HttpError) {
         throw new HttpException(error.message, error.statusCode);
       } else {
@@ -147,7 +150,7 @@ export class ApplicationsService {
         });
       } else {
         throw new HttpError(
-          'Cannot archive application of post you are not the owner of',
+          'Cannot unarchive application of post you are not the owner of',
           HttpStatus.FORBIDDEN,
         );
       }
@@ -176,7 +179,11 @@ export class ApplicationsService {
       });
       if (post) {
         if (post.userId === user.id) {
-          await this.prismaService.application.update({
+          this.prismaService.post.update({
+            where: { id: post.id },
+            data: { peopleAccepted: { increment: 1 } },
+          });
+          return await this.prismaService.application.update({
             where: { id },
             data: { approved: true },
           });
