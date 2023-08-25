@@ -11,7 +11,7 @@ A platform for devs and students to collaborate on projects or research.
 
 ## Tech Stack
 
-- FE: React/Next, mantine, tailwind
+- FE: React/Next, daisyUI, tailwind
 - Backend: Nest (Render), Prisma, PSQL
 
 ## Build Steps
